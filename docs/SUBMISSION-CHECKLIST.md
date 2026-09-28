@@ -1,42 +1,42 @@
 # Submission Checklist
 
 ## Core
-- [ ] Python RAG implementation
-- [ ] LangGraph workflow
-- [ ] Pinecone vector store
-- [ ] OpenAI embeddings
-- [ ] LLM
-- [ ] PDF ingestion
-- [ ] chunking
-- [ ] embeddings/indexing
-- [ ] retrieval
-- [ ] grounded generation
-- [ ] unsupported-question handling
+- [x] Python RAG implementation
+- [x] LangGraph workflow
+- [x] Pinecone vector store
+- [x] OpenAI embeddings
+- [x] LLM
+- [x] PDF ingestion
+- [x] chunking
+- [x] embeddings/indexing
+- [x] retrieval
+- [x] grounded generation
+- [x] unsupported-question handling
 
 ## API / UI
-- [ ] FastAPI or Streamlit works
-- [ ] answer returned/displayed
-- [ ] retrieved context returned/displayed
-- [ ] confidence/relevance returned/displayed
+- [x] FastAPI or Streamlit works
+- [x] answer returned/displayed
+- [x] retrieved context returned/displayed
+- [x] confidence/relevance returned/displayed
 
 ## Testing
-- [ ] 5–6 sample queries
-- [ ] grounded questions
-- [ ] out-of-domain question
-- [ ] refusal verified
-- [ ] retrieval quality reviewed
+- [x] 5–6 sample queries
+- [x] grounded questions
+- [x] out-of-domain question
+- [x] refusal verified
+- [x] retrieval quality reviewed
 
 ## Repository
-- [ ] clean structure
-- [ ] requirements.txt
-- [ ] .env.example
-- [ ] .gitignore
-- [ ] no API keys
-- [ ] README setup
-- [ ] ingestion command
-- [ ] application command
-- [ ] testing commands
-- [ ] architecture documentation
+- [x] clean structure
+- [x] requirements.txt
+- [x] .env.example
+- [x] .gitignore
+- [x] no API keys
+- [x] README setup
+- [x] ingestion command
+- [x] application command
+- [x] testing commands
+- [x] architecture documentation
 
 ## Final Validation
 Clone → create environment → install → configure → add PDF → ingest → verify Pinecone → start app → run benchmarks → verify grounding/refusal → check README → check secrets → push → submit GitHub URL.
