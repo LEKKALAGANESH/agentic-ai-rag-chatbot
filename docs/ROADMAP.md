@@ -18,15 +18,15 @@
 - [x] .env.example
 - [x] .gitignore
 - [x] README
-- [x] source PDF
+- [ ] Source PDF available for local ingestion
 
 ## Phase 2 — Ingestion
 - [x] PDF loader
 - [x] chunking
 - [x] embeddings
-- [x] Pinecone index
+- [x] Pinecone index creation
 - [x] metadata
-- [x] ingestion verification
+- [ ] Live Pinecone ingestion verification (requires credentials)
 
 ## Phase 3 — RAG
 - [x] LangGraph state
@@ -37,23 +37,25 @@
 - [x] meaningful score
 
 ## Phase 4 — Interface
-- [x] FastAPI /chat or Streamlit
+- [x] FastAPI /chat
 - [x] answer output
 - [x] context output
 - [x] score output
 
 ## Phase 5 — Evaluation
-- [x] 5–6 benchmark queries
-- [x] out-of-domain refusal
-- [x] related-but-unsupported refusal
-- [x] retrieval review
+- [x] 6 benchmark queries defined
+- [ ] Live benchmark execution
+- [ ] Out-of-domain refusal verified against live index
+- [ ] Retrieval quality reviewed against live index
 
 ## Phase 6 — Submission
-- [x] clean repository
-- [x] secret check
-- [x] clean-environment validation
-- [x] README update
-- [x] GitHub submission
+- [x] Source code committed
+- [x] Documentation committed
+- [x] Repository configuration committed
+- [ ] Clean-environment runtime validation
+- [ ] Pinecone index populated
+- [ ] Benchmark evidence captured
+- [ ] Final submission review
 
-## Future
-Source/page citations, configurable thresholds, metadata filters, automated evaluation, observability and multi-document support.
+## Current Status
+The implementation is committed. Live end-to-end validation remains dependent on installing the dependencies, providing OpenAI/Pinecone credentials, and supplying the Agentic AI PDF.
