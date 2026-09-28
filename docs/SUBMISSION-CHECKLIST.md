@@ -1,11 +1,11 @@
 # Submission Checklist
 
-## Core
+## Core Implementation
 - [x] Python RAG implementation
 - [x] LangGraph workflow
-- [x] Pinecone vector store
+- [x] Pinecone vector store integration
 - [x] OpenAI embeddings
-- [x] LLM
+- [x] OpenAI LLM
 - [x] PDF ingestion
 - [x] chunking
 - [x] embeddings/indexing
@@ -14,29 +14,37 @@
 - [x] unsupported-question handling
 
 ## API / UI
-- [x] FastAPI or Streamlit works
-- [x] answer returned/displayed
-- [x] retrieved context returned/displayed
-- [x] confidence/relevance returned/displayed
+- [x] FastAPI interface
+- [x] final answer returned
+- [x] retrieved context returned
+- [x] confidence/relevance returned
 
 ## Testing
-- [x] 5–6 sample queries
-- [x] grounded questions
-- [x] out-of-domain question
-- [x] refusal verified
-- [x] retrieval quality reviewed
+- [x] 6 benchmark queries defined
+- [ ] document-grounded queries executed
+- [ ] out-of-domain question executed
+- [ ] refusal verified with live dependencies
+- [ ] retrieval quality reviewed
 
 ## Repository
 - [x] clean structure
 - [x] requirements.txt
 - [x] .env.example
 - [x] .gitignore
-- [x] no API keys
+- [x] no API keys committed
 - [x] README setup
 - [x] ingestion command
 - [x] application command
-- [x] testing commands
+- [x] testing command
 - [x] architecture documentation
 
 ## Final Validation
-Clone → create environment → install → configure → add PDF → ingest → verify Pinecone → start app → run benchmarks → verify grounding/refusal → check README → check secrets → push → submit GitHub URL.
+- [x] source code committed
+- [x] documentation committed
+- [ ] clean-environment install and runtime test
+- [ ] Pinecone index populated
+- [ ] benchmark evidence captured
+- [ ] final secret scan
+- [ ] final submission review
+
+> Runtime-dependent boxes remain unchecked because this environment cannot execute the repository against your OpenAI/Pinecone credentials.
