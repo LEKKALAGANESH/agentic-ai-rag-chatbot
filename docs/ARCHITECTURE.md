@@ -13,7 +13,7 @@ User question
 → retrieve top-k chunks
 → prepare context
 → relevance/refusal decision
-→ grounded generation
+→ grounded generation (OpenAI → Groq → Gemini fallback, configured providers only)
 → answer + context + score
 
 ## Components
@@ -62,3 +62,5 @@ question → semantic retrieval → relevant context → grounding gate → LLM 
 
 ## Boundary
 The LLM must never become an unrestricted fallback knowledge source.
+
+Provider fallback is separate from knowledge fallback: if OpenAI fails, the same grounded prompt and retrieved context go to Groq, then Gemini. Embeddings stay on OpenAI because the index vectors come from the OpenAI embedding model.

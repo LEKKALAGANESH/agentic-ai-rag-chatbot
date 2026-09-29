@@ -28,7 +28,7 @@ If Streamlit is selected, show:
 ## Error States
 - Blank query: validation error.
 - Vector store unavailable: service error.
-- LLM unavailable: service error.
+- LLM unavailable: fall back OpenAI → Groq → Gemini (configured providers only); service error if all fail.
 - Insufficient context: refusal.
 - Invalid configuration: clear startup/configuration error.
 

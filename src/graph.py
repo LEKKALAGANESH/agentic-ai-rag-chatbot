@@ -1,6 +1,7 @@
 """LangGraph RAG workflow with strict grounding and retrieval scoring."""
 from __future__ import annotations
 
+import os
 from typing import Any, TypedDict
 
 from langchain_core.documents import Document
@@ -29,8 +30,20 @@ def _services():
         index_name=settings.pinecone_index_name,
         embedding=embeddings,
     )
-    llm = ChatOpenAI(model=settings.llm_model, temperature=0)
-    return settings, store, llm
+    return settings, store, _llm(settings)
+
+
+def _llm(settings):
+    # Fallbacks cover the chat model only; embeddings must stay OpenAI to match the indexed vectors.
+    # max_retries=1 so a dead provider fails over quickly instead of backing off.
+    llms = [ChatOpenAI(model=settings.llm_model, temperature=0, max_retries=1)]
+    if os.getenv("GROQ_API_KEY"):
+        from langchain_groq import ChatGroq
+        llms.append(ChatGroq(model=settings.groq_model, temperature=0, max_retries=1))
+    if os.getenv("GOOGLE_API_KEY"):
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        llms.append(ChatGoogleGenerativeAI(model=settings.google_model, temperature=0, max_retries=1))
+    return llms[0].with_fallbacks(llms[1:]) if len(llms) > 1 else llms[0]
 
 
 def retrieve(state: AgentState) -> AgentState:

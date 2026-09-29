@@ -37,5 +37,6 @@ Expected: refusal rather than a general-knowledge answer.
 | Confidence | Does the score reflect retrieval quality? |
 | Transparency | Are context chunks visible? |
 | Stability | Does behavior remain acceptable across regression runs? |
+| LLM fallback | With an invalid OPENAI chat model or key, does Groq/Gemini answer with the same grounding and refusal behavior? |
 
 Every change to chunking, embeddings, retrieval, prompts or thresholds should rerun the benchmark set.

@@ -30,7 +30,8 @@ def _index_dimension(embedding_model: str) -> int:
 def ensure_index() -> None:
     settings = get_settings()
     pc = Pinecone(api_key=settings.pinecone_api_key)
-    index_list = pc.list_indexes()\n    existing = set(index_list.names()) if hasattr(index_list, "names") else {item["name"] for item in index_list}
+    index_list = pc.list_indexes()
+    existing = set(index_list.names()) if hasattr(index_list, "names") else {item["name"] for item in index_list}
     if settings.pinecone_index_name not in existing:
         pc.create_index(
             name=settings.pinecone_index_name,
