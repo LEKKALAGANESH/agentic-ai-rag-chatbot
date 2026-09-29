@@ -3,21 +3,24 @@
 ## Runtime
 | Requirement | Guidance |
 |---|---|
-| Python | 3.10+ recommended |
+| Python | 3.10–3.13 (3.14 unsupported: no langchain-pinecone build) |
 | OS | macOS, Linux or Windows |
 | Windows | WSL2 recommended |
 | RAM | Minimum 8 GB |
-| Internet | Required for OpenAI and Pinecone |
+| Internet | Required for OpenAI, Pinecone and any configured fallback LLM |
 | Git | Recommended |
 
 ## Services
-- OpenAI for embeddings and LLM.
+- OpenAI for embeddings and primary LLM.
+- Optional Groq and Google Gemini as automatic LLM fallbacks.
 - Pinecone for vector storage/retrieval.
 - Agentic AI eBook as knowledge source.
 
 ## Recommended Models
 - text-embedding-3-small
 - gpt-4o-mini
+- llama-3.3-70b-versatile (Groq fallback)
+- gemini-2.5-flash (Gemini fallback)
 
 Verify current provider model dimensions and SDK configuration before creating the index because APIs can change.
 
@@ -25,6 +28,8 @@ Verify current provider model dimensions and SDK configuration before creating t
 langchain
 langgraph
 langchain-openai
+langchain-groq
+langchain-google-genai
 langchain-community
 langchain-pinecone
 langchain-text-splitters
@@ -39,6 +44,8 @@ python-dotenv
 OPENAI_API_KEY=
 PINECONE_API_KEY=
 PINECONE_INDEX_NAME=agentic-ai-index
+GROQ_API_KEY=            # optional fallback
+GOOGLE_API_KEY=          # optional fallback
 
 ## Recommended Structure
 agentic-ai-rag-chatbot/

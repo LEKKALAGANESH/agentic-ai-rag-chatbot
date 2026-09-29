@@ -23,8 +23,9 @@ If selected:
 streamlit run app.py
 
 ## Required Deployment Configuration
-- Python 3.10+ recommended
+- Python 3.10–3.13 (3.14 unsupported: no langchain-pinecone build)
 - OpenAI API access
+- Optional Groq / Google Gemini API access for LLM fallback
 - Pinecone API access
 - Pinecone index
 - environment variables

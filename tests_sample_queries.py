@@ -11,7 +11,7 @@ BENCHMARK_QUERIES = [
 if __name__ == "__main__":
     from src.graph import answer_question
     for i, query in enumerate(BENCHMARK_QUERIES, 1):
-        print(f"\\n[{i}] {query}")
+        print(f"\n[{i}] {query}")
         try:
             print(answer_question(query))
         except Exception as exc:

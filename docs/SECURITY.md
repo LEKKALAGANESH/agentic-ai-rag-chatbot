@@ -5,6 +5,10 @@ Required credentials:
 - OPENAI_API_KEY
 - PINECONE_API_KEY
 
+Optional fallback credentials:
+- GROQ_API_KEY
+- GOOGLE_API_KEY
+
 Store them in .env locally or in deployment secret storage.
 
 ## Git Protection

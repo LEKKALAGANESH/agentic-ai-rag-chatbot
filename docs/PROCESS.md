@@ -32,6 +32,8 @@ pip install -r requirements.txt
 OPENAI_API_KEY
 PINECONE_API_KEY
 PINECONE_INDEX_NAME
+GROQ_API_KEY (optional fallback)
+GOOGLE_API_KEY (optional fallback)
 
 Never commit .env.
 

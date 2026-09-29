@@ -20,6 +20,8 @@ Initial recommendation:
 ## Grounding
 Generation must use retrieved context only. If the context does not contain enough information, the system must not use general model knowledge and must refuse.
 
+Fallback providers (Groq, Gemini) receive the identical system prompt and context, so the grounding rules apply to whichever model answers.
+
 ## Confidence
 Confidence must represent a measurable signal. Possible signals:
 - top retrieval similarity

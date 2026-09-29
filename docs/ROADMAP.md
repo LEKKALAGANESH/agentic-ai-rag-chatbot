@@ -35,6 +35,7 @@
 - [x] grounded generation
 - [x] relevance/refusal gate
 - [x] meaningful score
+- [x] LLM provider fallback (OpenAI → Groq → Gemini)
 
 ## Phase 4 — Interface
 - [x] FastAPI /chat
@@ -47,15 +48,17 @@
 - [ ] Live benchmark execution
 - [ ] Out-of-domain refusal verified against live index
 - [ ] Retrieval quality reviewed against live index
+- [ ] LLM fallback verified with live keys
 
 ## Phase 6 — Submission
 - [x] Source code committed
 - [x] Documentation committed
 - [x] Repository configuration committed
-- [ ] Clean-environment runtime validation
+- [x] Clean-environment install and API boot (Python 3.12)
+- [ ] End-to-end runtime validation with live credentials
 - [ ] Pinecone index populated
 - [ ] Benchmark evidence captured
 - [ ] Final submission review
 
 ## Current Status
-The implementation is committed. Live end-to-end validation remains dependent on installing the dependencies, providing OpenAI/Pinecone credentials, and supplying the Agentic AI PDF.
+The implementation is committed, installs on Python 3.10–3.13 and the API boots locally. Live end-to-end validation remains dependent on OpenAI/Pinecone credentials (plus optional Groq/Google keys for fallback) and the Agentic AI PDF.
