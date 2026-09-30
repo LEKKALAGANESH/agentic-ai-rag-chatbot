@@ -19,9 +19,15 @@ class Settings(BaseModel):
     google_model: str = "gemini-2.5-flash"
     top_k: int = 3
     retrieval_threshold: float = 0.30
+    # Gemini cosine scores run higher: measured ~0.53 off-topic vs 0.75-0.80 on-topic for this eBook.
+    google_retrieval_threshold: float = 0.62
     chunk_size: int = 1000
     chunk_overlap: int = 200
     source_name: str = "Agentic AI eBook"
+
+    @property
+    def threshold(self) -> float:
+        return self.google_retrieval_threshold if self.embedding_provider == "google" else self.retrieval_threshold
 
     @property
     def index_name(self) -> str:
@@ -58,6 +64,7 @@ def get_settings() -> Settings:
         google_model=os.getenv("GOOGLE_LLM_MODEL", "gemini-2.5-flash"),
         top_k=int(os.getenv("RAG_TOP_K", "3")),
         retrieval_threshold=float(os.getenv("RAG_RETRIEVAL_THRESHOLD", "0.30")),
+        google_retrieval_threshold=float(os.getenv("RAG_RETRIEVAL_THRESHOLD_GOOGLE", "0.62")),
         chunk_size=int(os.getenv("RAG_CHUNK_SIZE", "1000")),
         chunk_overlap=int(os.getenv("RAG_CHUNK_OVERLAP", "200")),
     )

@@ -84,7 +84,21 @@ The application retrieves the top-k chunks (`RAG_TOP_K`, default 3) and computes
 confidence_score = clamp(mean(cosine_similarity of the top-k chunks), 0, 1)
 ```
 
-If `confidence_score < RAG_RETRIEVAL_THRESHOLD` (default 0.30), or nothing is retrieved, the LLM is not called: the API returns `I cannot answer based on the provided document.` with empty context and a score of 0.0. Otherwise the LLM receives only the retrieved chunks with a strict system prompt that forbids outside knowledge and requires the same refusal sentence when the context is insufficient.
+If `confidence_score` is below the threshold, or nothing is retrieved, the LLM is not called: the API returns `I cannot answer based on the provided document.` with empty context and a score of 0.0. Otherwise the LLM receives only the retrieved chunks with a strict system prompt that forbids outside knowledge and requires the same refusal sentence when the context is insufficient.
+
+Thresholds differ per embedding provider because the models score similarity on different scales:
+
+| Embeddings | Variable | Default | Measured on this eBook |
+|---|---|---|---|
+| OpenAI | `RAG_RETRIEVAL_THRESHOLD` | 0.30 | not yet measured |
+| Gemini | `RAG_RETRIEVAL_THRESHOLD_GOOGLE` | 0.62 | on-topic 0.745–0.80, off-topic (FIFA) 0.534 |
+
+Related-but-unsupported questions can score above the threshold; the strict prompt then makes the LLM refuse.
+
+Each response also includes `sources` (page and chunk ID per retrieved chunk).
+
+## Observability
+Every `/chat` request logs the question, chunk count, raw retrieval scores, confidence, whether it was refused, and latency. API keys are never logged.
 
 ## Documentation
 See the `docs/` directory for PRD, design, architecture, RAG pipeline, API, testing, security, deployment, requirements, roadmap and submission checklist.

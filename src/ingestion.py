@@ -5,13 +5,23 @@ import argparse
 import hashlib
 from pathlib import Path
 
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.documents import Document
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pinecone import Pinecone, ServerlessSpec
+from pypdf import PdfReader
 
 from .config import ROOT_DIR, get_settings
 from .graph import embeddings as make_embeddings
+
+
+def load_pdf(path: Path) -> list[Document]:
+    # One Document per page with a 0-based "page", matching what PyPDFLoader produced.
+    reader = PdfReader(path)
+    return [
+        Document(page_content=page.extract_text() or "", metadata={"page": i})
+        for i, page in enumerate(reader.pages)
+    ]
 
 
 def ensure_index(settings, dimension: int) -> None:
@@ -46,8 +56,7 @@ def run_ingestion(pdf_path: str | Path, reset: bool = False) -> dict:
     embeddings = make_embeddings(settings)
     # Measure instead of hard-coding: dimensions differ per provider and model.
     ensure_index(settings, len(embeddings.embed_query("dimension probe")))
-    loader = PyPDFLoader(str(path))
-    pages = loader.load()
+    pages = load_pdf(path)
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=settings.chunk_size,
         chunk_overlap=settings.chunk_overlap,
