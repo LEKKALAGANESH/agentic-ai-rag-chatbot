@@ -12,17 +12,21 @@ POST /chat
 {
   "final_answer": "Grounded answer...",
   "retrieved_context": ["chunk 1", "chunk 2", "chunk 3"],
-  "confidence_score": 0.91
+  "confidence_score": 0.79,
+  "sources": [{"page": 3, "chunk_id": "<pdf-hash>-00004"}, ...]
 }
 
 ## Unsupported Response
 {
   "final_answer": "I cannot answer based on the provided document.",
   "retrieved_context": [],
-  "confidence_score": 0.0
+  "confidence_score": 0.0,
+  "sources": []
 }
 
-The exact score/refusal policy depends on the implemented relevance threshold.
+`sources` gives the eBook page and chunk ID for each entry in `retrieved_context`, in the same order.
+
+Refusal happens before the LLM when `confidence_score` is below the provider threshold (see README "Grounding").
 
 ## Local API
 http://127.0.0.1:8000
@@ -41,4 +45,4 @@ Suggested status meanings:
 - 400 invalid request
 - 422 validation failure
 - 500 internal error
-- 503 dependency unavailable
+- 503 dependency unavailable (missing keys, or Pinecone index not ingested yet)

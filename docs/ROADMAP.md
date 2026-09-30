@@ -18,7 +18,7 @@
 - [x] .env.example
 - [x] .gitignore
 - [x] README
-- [ ] Source PDF available for local ingestion
+- [x] Source PDF available for local ingestion
 
 ## Phase 2 — Ingestion
 - [x] PDF loader
@@ -26,7 +26,7 @@
 - [x] embeddings
 - [x] Pinecone index creation
 - [x] metadata
-- [ ] Live Pinecone ingestion verification (requires credentials)
+- [x] Live Pinecone ingestion verification (60 pages, 119 chunks)
 
 ## Phase 3 — RAG
 - [x] LangGraph state
@@ -45,19 +45,19 @@
 
 ## Phase 5 — Evaluation
 - [x] 6 benchmark queries defined
-- [ ] Live benchmark execution
-- [ ] Out-of-domain refusal verified against live index
-- [ ] Retrieval quality reviewed against live index
-- [ ] LLM fallback verified with live keys
+- [x] Live benchmark execution (docs/BENCHMARK-RESULTS.md)
+- [x] Out-of-domain refusal verified against live index
+- [x] Retrieval quality reviewed against live index
+- [x] LLM fallback verified with live keys (Groq 401 → Gemini)
 
 ## Phase 6 — Submission
 - [x] Source code committed
 - [x] Documentation committed
 - [x] Repository configuration committed
 - [x] Clean-environment install and API boot (Python 3.12)
-- [ ] End-to-end runtime validation with live credentials
-- [ ] Pinecone index populated
-- [ ] Benchmark evidence captured
+- [x] End-to-end runtime validation with live credentials
+- [x] Pinecone index populated
+- [x] Benchmark evidence captured
 - [ ] Final submission review
 
 ## Current Status

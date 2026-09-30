@@ -31,11 +31,11 @@ langgraph
 langchain-openai
 langchain-groq
 langchain-google-genai
-langchain-community
 langchain-pinecone
 langchain-text-splitters
-pinecone-client
-pypdf
+pinecone (the current name of pinecone-client)
+pypdf (used directly; langchain-community is deprecated and not needed)
+fonttools (lets pypdf decode the eBook's heading font)
 fastapi
 uvicorn
 streamlit
