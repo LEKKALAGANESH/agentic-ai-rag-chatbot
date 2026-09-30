@@ -6,38 +6,32 @@ import hashlib
 from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pinecone import Pinecone, ServerlessSpec
 
 from .config import ROOT_DIR, get_settings
+from .graph import embeddings as make_embeddings
 
 
-def _index_dimension(embedding_model: str) -> int:
-    # OpenAI text-embedding-3-small defaults to 1536 dimensions.
-    # Keep this isolated so the dimension can be changed with the model configuration.
-    if embedding_model == "text-embedding-3-small":
-        return 1536
-    if embedding_model == "text-embedding-3-large":
-        return 3072
-    raise ValueError(
-        f"Unknown embedding model {embedding_model!r}. Set the index dimension explicitly "
-        "for custom models before ingestion."
-    )
-
-
-def ensure_index() -> None:
-    settings = get_settings()
+def ensure_index(settings, dimension: int) -> None:
     pc = Pinecone(api_key=settings.pinecone_api_key)
     index_list = pc.list_indexes()
     existing = set(index_list.names()) if hasattr(index_list, "names") else {item["name"] for item in index_list}
-    if settings.pinecone_index_name not in existing:
+    if settings.index_name not in existing:
         pc.create_index(
-            name=settings.pinecone_index_name,
-            dimension=_index_dimension(settings.embedding_model),
+            name=settings.index_name,
+            dimension=dimension,
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+        )
+        return
+    actual = pc.describe_index(settings.index_name).dimension
+    if actual != dimension:
+        raise RuntimeError(
+            f"Pinecone index {settings.index_name!r} has dimension {actual}, but the "
+            f"{settings.embedding_provider} embedding model produces {dimension}. "
+            "Delete the index in Pinecone or set a different PINECONE_INDEX_NAME."
         )
 
 
@@ -49,7 +43,9 @@ def run_ingestion(pdf_path: str | Path, reset: bool = False) -> dict:
     if not path.exists():
         raise FileNotFoundError(f"PDF not found: {path}")
 
-    ensure_index()
+    embeddings = make_embeddings(settings)
+    # Measure instead of hard-coding: dimensions differ per provider and model.
+    ensure_index(settings, len(embeddings.embed_query("dimension probe")))
     loader = PyPDFLoader(str(path))
     pages = loader.load()
     splitter = RecursiveCharacterTextSplitter(
@@ -70,19 +66,18 @@ def run_ingestion(pdf_path: str | Path, reset: bool = False) -> dict:
             "chunk_id": f"{source_hash}-{i:05d}",
         })
 
-    embeddings = OpenAIEmbeddings(model=settings.embedding_model)
     vector_store = PineconeVectorStore.from_existing_index(
-        index_name=settings.pinecone_index_name,
+        index_name=settings.index_name,
         embedding=embeddings,
     )
 
     if reset:
         # Resetting the whole index is intentionally explicit because this project has one source.
         pc = Pinecone(api_key=settings.pinecone_api_key)
-        pc.Index(settings.pinecone_index_name).delete(delete_all=True)
+        pc.Index(settings.index_name).delete(delete_all=True)
 
     vector_store.add_documents(chunks, ids=[d.metadata["chunk_id"] for d in chunks])
-    return {"pages": len(pages), "chunks": len(chunks), "index": settings.pinecone_index_name}
+    return {"pages": len(pages), "chunks": len(chunks), "index": settings.index_name, "embeddings": settings.embedding_provider}
 
 
 def main() -> None:

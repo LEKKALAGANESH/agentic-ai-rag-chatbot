@@ -13,6 +13,7 @@
 ## Services
 - OpenAI for embeddings and primary LLM.
 - Optional Groq and Google Gemini as automatic LLM fallbacks.
+- Google Gemini embeddings (`gemini-embedding-001`) when no OpenAI key is set; separate `-google` Pinecone index.
 - Pinecone for vector storage/retrieval.
 - Agentic AI eBook as knowledge source.
 
@@ -44,8 +45,9 @@ python-dotenv
 OPENAI_API_KEY=
 PINECONE_API_KEY=
 PINECONE_INDEX_NAME=agentic-ai-index
-GROQ_API_KEY=            # optional fallback
-GOOGLE_API_KEY=          # optional fallback
+GROQ_API_KEY=            # optional answer fallback
+GOOGLE_API_KEY=          # embeddings when no OpenAI key; answer fallback
+EMBEDDING_PROVIDER=auto  # auto | openai | google
 
 ## Recommended Structure
 agentic-ai-rag-chatbot/
