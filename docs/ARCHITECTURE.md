@@ -63,4 +63,4 @@ question → semantic retrieval → relevant context → grounding gate → LLM 
 ## Boundary
 The LLM must never become an unrestricted fallback knowledge source.
 
-Provider fallback is separate from knowledge fallback: if OpenAI fails, the same grounded prompt and retrieved context go to Groq, then Gemini. Embeddings stay on OpenAI because the index vectors come from the OpenAI embedding model.
+Provider fallback is separate from knowledge fallback: if OpenAI fails, the same grounded prompt and retrieved context go to Groq, then Gemini. Embeddings use OpenAI or Gemini (chosen once from the configured keys), each with its own Pinecone index; they never fall back at query time because query and index vectors must come from the same model.

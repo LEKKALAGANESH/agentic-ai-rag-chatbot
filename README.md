@@ -53,20 +53,38 @@ python tests_sample_queries.py
 
 The benchmark requires a configured OpenAI API key and populated Pinecone index.
 
-## LLM fallback
-Answer generation tries OpenAI first, then Groq, then Google Gemini. A fallback is used only when its key is set in `.env`:
+## Providers
+Set `PINECONE_API_KEY` plus any of `OPENAI_API_KEY`, `GROQ_API_KEY`, `GOOGLE_API_KEY`.
+
+| Role | Providers | Rule |
+|---|---|---|
+| Embeddings | OpenAI or Google Gemini | OpenAI if its key is set, otherwise Gemini. Override with `EMBEDDING_PROVIDER=openai\|google`. Groq has no embeddings API. |
+| Answer generation | OpenAI → Groq → Gemini | Automatic fallback across every provider whose key is set. |
+
+At least one embedding key (OpenAI or Google) is required.
+
+Each embedding provider uses its own Pinecone index because vector dimensions differ: OpenAI uses `PINECONE_INDEX_NAME` (default `agentic-ai-index`), Gemini uses `<PINECONE_INDEX_NAME>-google`. Ingestion measures the embedding dimension and creates the index automatically. After changing the embedding provider, run ingestion again. Embeddings never fall back at query time, since query and index vectors must come from the same model.
 
 ```
+OPENAI_API_KEY=
 GROQ_API_KEY=
-GROQ_LLM_MODEL=llama-3.3-70b-versatile
 GOOGLE_API_KEY=
+EMBEDDING_PROVIDER=auto
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+GOOGLE_EMBEDDING_MODEL=gemini-embedding-001
+OPENAI_LLM_MODEL=gpt-4o-mini
+GROQ_LLM_MODEL=llama-3.3-70b-versatile
 GOOGLE_LLM_MODEL=gemini-2.5-flash
 ```
 
-Embeddings always use OpenAI, because the Pinecone vectors were created with the OpenAI embedding model and other providers' vectors are incompatible. `OPENAI_API_KEY` therefore stays required.
-
 ## Grounding
-The application retrieves the top-k chunks, calculates a retrieval confidence from returned similarity scores, refuses below the configured threshold, and instructs the LLM to answer only from retrieved context.
+The application retrieves the top-k chunks (`RAG_TOP_K`, default 3) and computes:
+
+```
+confidence_score = clamp(mean(cosine_similarity of the top-k chunks), 0, 1)
+```
+
+If `confidence_score < RAG_RETRIEVAL_THRESHOLD` (default 0.30), or nothing is retrieved, the LLM is not called: the API returns `I cannot answer based on the provided document.` with empty context and a score of 0.0. Otherwise the LLM receives only the retrieved chunks with a strict system prompt that forbids outside knowledge and requires the same refusal sentence when the context is insufficient.
 
 ## Documentation
 See the `docs/` directory for PRD, design, architecture, RAG pipeline, API, testing, security, deployment, requirements, roadmap and submission checklist.

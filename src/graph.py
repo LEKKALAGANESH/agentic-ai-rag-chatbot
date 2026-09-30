@@ -23,26 +23,37 @@ class AgentState(TypedDict, total=False):
     answer: str
 
 
+def embeddings(settings):
+    # Query and index embeddings must come from the same provider, so this never falls back mid-run.
+    if settings.embedding_provider == "google":
+        from langchain_google_genai import GoogleGenerativeAIEmbeddings
+        return GoogleGenerativeAIEmbeddings(model=settings.google_embedding_model)
+    return OpenAIEmbeddings(model=settings.embedding_model)
+
+
 def _services():
     settings = get_settings()
-    embeddings = OpenAIEmbeddings(model=settings.embedding_model)
     store = PineconeVectorStore.from_existing_index(
-        index_name=settings.pinecone_index_name,
-        embedding=embeddings,
+        index_name=settings.index_name,
+        embedding=embeddings(settings),
     )
     return settings, store, _llm(settings)
 
 
 def _llm(settings):
-    # Fallbacks cover the chat model only; embeddings must stay OpenAI to match the indexed vectors.
+    # Chat models fall back OpenAI -> Groq -> Gemini across whichever keys are set.
     # max_retries=1 so a dead provider fails over quickly instead of backing off.
-    llms = [ChatOpenAI(model=settings.llm_model, temperature=0, max_retries=1)]
+    llms = []
+    if os.getenv("OPENAI_API_KEY"):
+        llms.append(ChatOpenAI(model=settings.llm_model, temperature=0, max_retries=1))
     if os.getenv("GROQ_API_KEY"):
         from langchain_groq import ChatGroq
         llms.append(ChatGroq(model=settings.groq_model, temperature=0, max_retries=1))
     if os.getenv("GOOGLE_API_KEY"):
         from langchain_google_genai import ChatGoogleGenerativeAI
         llms.append(ChatGoogleGenerativeAI(model=settings.google_model, temperature=0, max_retries=1))
+    if not llms:
+        raise RuntimeError("Missing required environment variables: set at least one of OPENAI_API_KEY, GROQ_API_KEY, GOOGLE_API_KEY")
     return llms[0].with_fallbacks(llms[1:]) if len(llms) > 1 else llms[0]
 
 

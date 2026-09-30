@@ -2,12 +2,11 @@
 
 ## Secrets
 Required credentials:
-- OPENAI_API_KEY
 - PINECONE_API_KEY
+- OPENAI_API_KEY or GOOGLE_API_KEY (embeddings)
 
 Optional fallback credentials:
 - GROQ_API_KEY
-- GOOGLE_API_KEY
 
 Store them in .env locally or in deployment secret storage.
 
