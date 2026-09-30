@@ -12,3 +12,4 @@ data/*.pdf
 
 venv*/
 .claude/
+Requirements/
